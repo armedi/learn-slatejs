@@ -1,0 +1,13 @@
+.title {
+  background: linear-gradient(135deg, #6699ff 0%, #ff3366 100%);
+  color: #b664b0;
+  font-size: 80px;
+  font-weight: 800;
+  letter-spacing: -2.5px;
+  line-height: 90px;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-box-decoration-break: clone;
+  filter: drop-shadow(5px 5px #333);
+}

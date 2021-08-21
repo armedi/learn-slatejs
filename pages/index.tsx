@@ -1,62 +1,21 @@
 import type { NextPage } from 'next';
-import { FC, useCallback, useMemo, useState } from 'react';
-import { createEditor, Descendant, Editor, Element, Transforms } from 'slate';
-import { Editable, Slate, withReact } from 'slate-react';
-
-const CodeElement: FC<{ attributes: any }> = (props) => {
-  return (
-    <pre {...props.attributes}>
-      <code>{props.children}</code>
-    </pre>
-  );
-};
-
-const DefaultElement: FC<{ attributes: any }> = (props) => {
-  return <p {...props.attributes}>{props.children}</p>;
-};
+import Editor from '../components/Editor';
+import styles from '../styles/home.module.css';
 
 const Home: NextPage = () => {
-  const editor = useMemo(() => withReact(createEditor()), []);
-
-  const [value, setValue] = useState<Descendant[]>([
-    {
-      type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
-    },
-  ]);
-
-  const renderElement = useCallback((props) => {
-    switch (props.element.type) {
-      case 'code':
-        return <CodeElement {...props} />;
-      default:
-        return <DefaultElement {...props} />;
-    }
-  }, []);
-
   return (
-    <Slate
-      editor={editor}
-      value={value}
-      onChange={(newValue) => setValue(newValue)}
-    >
-      <Editable
-        renderElement={renderElement}
-        onKeyDown={(event) => {
-          if (event.key === '`' && event.ctrlKey) {
-            event.preventDefault();
-            const [match] = Editor.nodes(editor, {
-              match: (n) => (n as Element).type === 'code',
-            });
-            Transforms.setNodes(
-              editor,
-              { type: match ? 'paragraph' : 'code' },
-              { match: (n) => Editor.isBlock(editor, n) }
-            );
-          }
-        }}
-      />
-    </Slate>
+    <div className="h-screen flex flex-col pt-20 px-40 pb-0 bg-gray-700">
+      <h1
+        className={
+          'text-6xl font-bold text-center text-white mb-16 ' + styles.title
+        }
+      >
+        Type Your Dream
+      </h1>
+      <div className="flex-1 bg-white rounded-t-3xl p-10 pb-0">
+        <Editor />
+      </div>
+    </div>
   );
 };
 
