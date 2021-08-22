@@ -42,7 +42,7 @@ const EditorView = ({ viewModel }: EditorComponentProps) => {
       onChange={viewModel.onContentChange}
     >
       <Editable
-        className="h-full text-xl"
+        className="flex-1 text-xl"
         renderElement={renderElement}
         onKeyDown={viewModel.onKeyDown}
       />
