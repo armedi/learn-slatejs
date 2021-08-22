@@ -14,7 +14,7 @@ import {
   ListItemElement,
 } from '../components/Elements';
 import defaultContent from '../contents/default';
-import { retrieveEditorContent } from '../utils/storage';
+import { retrieveEditorContent, storeEditorContent } from '../utils/storage';
 import { onKeyDown } from './handlers';
 
 interface EditorComponentProps {
@@ -77,7 +77,10 @@ const EditorContainer = () => {
     <EditorComponent
       editor={editor}
       content={content}
-      onContentChange={setContent}
+      onContentChange={(content) => {
+        setContent(content);
+        storeEditorContent(content);
+      }}
       onKeyDown={(event) => onKeyDown(editor, event)}
     />
   );
