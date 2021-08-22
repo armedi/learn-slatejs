@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import { RenderElementProps } from 'slate-react';
 
-const DefaultElement: FC<{ attributes: any }> = (props) => {
+const DefaultElement = (props: RenderElementProps) => {
   return <p {...props.attributes}>{props.children}</p>;
 };
 
