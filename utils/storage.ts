@@ -1,9 +1,9 @@
-class Storage {
-  set(key: string, value: unknown) {
+export class Storage {
+  async set(key: string, value: unknown) {
     localStorage.setItem(key, JSON.stringify(value));
   }
 
-  get(key: string) {
+  async get(key: string) {
     try {
       const stringValue = localStorage.getItem(key);
       if (stringValue) {
