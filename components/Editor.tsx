@@ -1,8 +1,9 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { Editable, RenderElementProps, Slate, withReact } from 'slate-react';
 import defaultContent from '../contents/default';
 import { onKeyDown } from '../handlers';
+import { retrieveEditorContent, storeEditorContent } from '../utils/storage';
 import {
   CodeElement,
   DefaultElement,
@@ -10,22 +11,22 @@ import {
   ListItemElement,
 } from './Elements';
 
-interface EditorComponentProps {
-  initialContent?: Descendant[];
-  storeContent?: (value: Descendant[]) => void;
-}
-
-const EditorComponent = ({
-  initialContent,
-  storeContent,
-}: EditorComponentProps) => {
+const EditorComponent = () => {
   const editor = useMemo(() => withReact(createEditor()), []);
+  const [loaded, setLoaded] = useState(false);
+  const [value, setValue] = useState<Descendant[]>(defaultContent);
 
-  const [value, setValue] = useState<Descendant[]>(
-    initialContent && initialContent?.length > 0
-      ? initialContent
-      : defaultContent
-  );
+  useEffect(() => {
+    const load = () => {
+      const editorContent = retrieveEditorContent();
+      if (editorContent) {
+        setValue(editorContent);
+      }
+    };
+
+    load();
+    setLoaded(true);
+  }, []);
 
   const renderElement = useCallback((props: RenderElementProps) => {
     switch (props.element.type) {
@@ -40,13 +41,15 @@ const EditorComponent = ({
     }
   }, []);
 
+  if (!loaded) return null;
+
   return (
     <Slate
       editor={editor}
       value={value}
       onChange={(newValue) => {
         setValue(newValue);
-        storeContent?.(newValue);
+        storeEditorContent(newValue);
       }}
     >
       <Editable
