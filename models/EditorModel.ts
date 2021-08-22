@@ -1,5 +1,5 @@
 import flyd from 'flyd';
-import { Descendant, Editor, Element, Transforms } from 'slate';
+import { Descendant, Editor, Element, Path, Text, Transforms } from 'slate';
 import defaultContent from '../contents/default';
 import { Storage } from '../utils/storage';
 
@@ -24,25 +24,50 @@ class EditorModel {
     this.storage.set(EDITOR_CONTENT_KEY, newContent);
   };
 
-  wrapNodesInList(callback: () => void) {
+  insertText(text: string, path?: Path) {
+    Transforms.insertText(this.editor, text, { at: path });
+  }
+
+  wrapNodesInList(options: { ordered?: boolean }, callback?: () => void) {
     const [match] = Editor.nodes<Element>(this.editor, {
       match: (n) => Element.isElement(n) && n.type === 'list-item',
     });
-    if (!match) {
-      Transforms.setNodes(
-        this.editor,
-        { type: 'list-item' },
-        { match: (n) => Editor.isBlock(this.editor, n) }
-      );
-      Transforms.wrapNodes(this.editor, {
-        type: 'list',
-        children: [],
+    // already a list item
+    if (match) return;
+
+    if (options.ordered) {
+      const [element] = Editor.node(this.editor, this.editor.selection!.focus);
+      if (!Text.isText(element) || !/^\d+$/.test(element.text)) {
+        return;
+      }
+      Transforms.insertText(this.editor, '', {
+        at: this.editor.selection!.focus.path,
       });
-      callback();
+    } else if (
+      !Editor.isStart(
+        this.editor,
+        this.editor.selection!.focus,
+        this.editor.selection!
+      )
+    ) {
+      return;
     }
+
+    Transforms.setNodes(
+      this.editor,
+      { type: 'list-item' },
+      { match: (n) => Editor.isBlock(this.editor, n) }
+    );
+    Transforms.wrapNodes(this.editor, {
+      type: 'list',
+      ordered: Boolean(options.ordered),
+      children: [],
+    });
+
+    callback?.();
   }
 
-  unwrapList(callback: () => void) {
+  unwrapList(callback?: () => void) {
     const [match] = Editor.nodes<Element>(this.editor, {
       match: (node) => Element.isElement(node) && node.type === 'list-item',
     });
@@ -55,7 +80,7 @@ class EditorModel {
           Transforms.liftNodes(this.editor);
         }
         Transforms.setNodes(this.editor, { type: 'paragraph' });
-        callback();
+        callback?.();
       }
     }
   }

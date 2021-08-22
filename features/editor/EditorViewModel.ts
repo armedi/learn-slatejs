@@ -25,8 +25,16 @@ class EditorViewModel {
   onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     switch (event.key) {
       case '-':
-        this.model.wrapNodesInList(() => event.preventDefault());
+        this.model.wrapNodesInList({ ordered: false }, () =>
+          event.preventDefault()
+        );
         break;
+      case '.': {
+        this.model.wrapNodesInList({ ordered: true }, () =>
+          event.preventDefault()
+        );
+        break;
+      }
       case 'Backspace':
         this.model.unwrapList(() => event.preventDefault());
         break;
