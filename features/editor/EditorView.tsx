@@ -6,8 +6,8 @@ import {
   DefaultElement,
   ListElement,
   ListItemElement,
-} from '../components/Elements';
-import storage from '../utils/storage';
+} from '../../components/Elements';
+import storage from '../../utils/storage';
 import EditorViewModel from './EditorViewModel';
 
 interface EditorComponentProps {

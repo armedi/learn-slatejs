@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import Editor from '../editor/EditorView';
+import Editor from '../features/editor/EditorView';
 import styles from '../styles/home.module.css';
 
 const Home: NextPage = () => {

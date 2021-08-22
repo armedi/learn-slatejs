@@ -1,8 +1,8 @@
 import flyd from 'flyd';
 import type { KeyboardEvent } from 'react';
 import { Descendant, Editor, Element, Transforms } from 'slate';
-import defaultContent from '../contents/default';
-import { Storage } from '../utils/storage';
+import defaultContent from '../../contents/default';
+import { Storage } from '../../utils/storage';
 
 const EDITOR_CONTENT_KEY = 'content';
 
