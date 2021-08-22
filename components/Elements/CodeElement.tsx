@@ -1,4 +1,4 @@
-import { RenderElementProps } from 'slate-react';
+import type { RenderElementProps } from 'slate-react';
 
 const CodeElement = (props: RenderElementProps) => {
   return (

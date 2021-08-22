@@ -1,4 +1,4 @@
-import { RenderElementProps } from 'slate-react';
+import type { RenderElementProps } from 'slate-react';
 import type { ListElement as IListElement } from '../../types/slate';
 
 const ListElement = (props: RenderElementProps) => {
