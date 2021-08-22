@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { Editable, RenderElementProps, Slate, withReact } from 'slate-react';
 import defaultContent from '../contents/default';
@@ -10,10 +10,22 @@ import {
   ListItemElement,
 } from './Elements';
 
-const EditorComponent: FC = () => {
+interface EditorComponentProps {
+  initialContent?: Descendant[];
+  storeContent?: (value: Descendant[]) => void;
+}
+
+const EditorComponent = ({
+  initialContent,
+  storeContent,
+}: EditorComponentProps) => {
   const editor = useMemo(() => withReact(createEditor()), []);
 
-  const [value, setValue] = useState<Descendant[]>(defaultContent);
+  const [value, setValue] = useState<Descendant[]>(
+    initialContent && initialContent?.length > 0
+      ? initialContent
+      : defaultContent
+  );
 
   const renderElement = useCallback((props: RenderElementProps) => {
     switch (props.element.type) {
@@ -32,7 +44,10 @@ const EditorComponent: FC = () => {
     <Slate
       editor={editor}
       value={value}
-      onChange={(newValue) => setValue(newValue)}
+      onChange={(newValue) => {
+        setValue(newValue);
+        storeContent?.(newValue);
+      }}
     >
       <Editable
         className="h-full text-xl"
