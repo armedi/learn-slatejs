@@ -12,7 +12,9 @@ const onKeyDown_Backspace =
 
       if (Editor.isStart(editor, editor.selection!.focus, path)) {
         event.preventDefault();
-        Transforms.liftNodes(editor);
+        if (path.length > 1) {
+          Transforms.liftNodes(editor);
+        }
         Transforms.setNodes(editor, { type: 'paragraph' });
       }
     }
