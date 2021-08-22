@@ -15,7 +15,7 @@ interface EditorComponentProps {
 }
 
 const EditorView = ({ viewModel }: EditorComponentProps) => {
-  const [content, setContent] = useState(viewModel.content());
+  const [content, setContent] = useState(viewModel.initialContent);
 
   useEffect(() => {
     viewModel.load(setContent);

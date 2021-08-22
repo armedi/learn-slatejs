@@ -7,7 +7,9 @@ import { Storage } from '../../utils/storage';
 const EDITOR_CONTENT_KEY = 'content';
 
 class EditorViewModel {
-  content = flyd.stream([{ text: '' }] as Descendant[]);
+  private content = flyd.stream([{ text: '' }] as Descendant[]);
+
+  initialContent = this.content();
 
   constructor(public editor: Editor, private storage: Storage) {}
 
