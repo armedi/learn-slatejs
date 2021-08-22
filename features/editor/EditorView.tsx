@@ -7,6 +7,7 @@ import {
   ListElement,
   ListItemElement,
 } from '../../components/Elements';
+import EditorModel from '../../models/EditorModel';
 import storage from '../../utils/storage';
 import EditorViewModel from './EditorViewModel';
 
@@ -15,7 +16,7 @@ interface EditorComponentProps {
 }
 
 const EditorView = ({ viewModel }: EditorComponentProps) => {
-  const [content, setContent] = useState(viewModel.initialContent);
+  const [content, setContent] = useState(viewModel.content);
 
   useEffect(() => {
     viewModel.load(setContent);
@@ -52,7 +53,8 @@ const EditorView = ({ viewModel }: EditorComponentProps) => {
 const EditorViewContainer = () => {
   const viewModel = useMemo(() => {
     const editor = withReact(createEditor());
-    return new EditorViewModel(editor, storage);
+    const model = new EditorModel(editor, storage);
+    return new EditorViewModel(model);
   }, []);
 
   return <EditorView viewModel={viewModel} />;
