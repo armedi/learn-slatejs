@@ -14,7 +14,7 @@ import {
   ListItemElement,
 } from '../components/Elements';
 import defaultContent from '../contents/default';
-import { retrieveEditorContent, storeEditorContent } from '../utils/storage';
+import storage from '../utils/storage';
 import { onKeyDown } from './handlers';
 
 interface EditorComponentProps {
@@ -54,6 +54,8 @@ const EditorComponent = ({
   );
 };
 
+const EDITOR_CONTENT_KEY = 'content';
+
 const EditorContainer = () => {
   const editor = useMemo(() => withReact(createEditor()), []);
   const [loaded, setLoaded] = useState(false);
@@ -61,7 +63,7 @@ const EditorContainer = () => {
 
   useEffect(() => {
     const load = () => {
-      const editorContent = retrieveEditorContent();
+      const editorContent = storage.get(EDITOR_CONTENT_KEY);
       if (editorContent) {
         setContent(editorContent);
       }
@@ -79,7 +81,7 @@ const EditorContainer = () => {
       content={content}
       onContentChange={(content) => {
         setContent(content);
-        storeEditorContent(content);
+        storage.set(EDITOR_CONTENT_KEY, content);
       }}
       onKeyDown={(event) => onKeyDown(editor, event)}
     />
